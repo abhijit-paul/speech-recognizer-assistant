@@ -1,0 +1,24 @@
+{
+  "name": "speech",
+  "version": "0.0.1",
+  "description": "Take actions on spoken text",
+  "main": "init.js",
+  "scripts": {
+    "start": "node init.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abhijit-paul/speech.git"
+  },
+  "author": "Abhijit Paul",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/abhijit-paul/speech/issues"
+  },
+  "homepage": "https://github.com/abhijit-paul/speech#readme",
+  "dependencies": {
+    "express": "^4.15.4",
+    "knwl.js": "^1.0.2"
+  }
+}

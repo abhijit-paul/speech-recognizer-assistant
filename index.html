@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Play</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="./bootstrap.min.css">
+    <link href="./mat-icon.css" rel="stylesheet">
+    <style type="text/css">
+        button {
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+
+<body>
+    <script src="./jquery-3.2.1.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+        
+        window.listen = function (inputT) {
+            var recognition = new webkitSpeechRecognition();
+            recognition.onresult = function (event) {
+                console.info(event);
+                var transcript = event.results[0][0].transcript
+                console.log(transcript);
+                if (inputT) {
+                    document.querySelector("#" + inputT)
+                        .value = event.results[0][0].transcript;
+                    takeaction(transcript);
+                    console.log(recognition);
+                }
+            }
+            recognition.onend = function (event) {
+                recognition.start();
+            }
+            recognition.start();
+        }
+
+        window.openLink = function (link) {
+            window.open(link, 'targetWindow',
+                'toolbar=no,\
+                        location=no,\
+                        status=no,\
+                        menubar=yes,\
+                        scrollbars=yes,\
+                        resizable=yes,\
+                        width=SomeSize,\
+                        height=SomeSize,\
+                        top=0,left=650,width=750,height=770').focus();
+        }
+
+        window.takeaction = function (action) {
+            var searchText = undefined;
+            if (action.startsWith('search')) {
+                searchText = action.replace('search', '');
+                window.speak("Searching " + searchText);
+                window.openLink("http://www.google.co.in/search?q=" + searchText);
+            }
+            else if (action.startsWith('play')) {
+                searchText = action.replace('play', '');
+                window.speak("Playing " + searchText);
+                window.openLink("https://www.youtube.com/results?search_query=" + searchText);
+            }
+            else if (action.startsWith('go to')) {
+                searchText = action.replace('go to ', '');
+                window.speak("Going to " + searchText);
+                window.openLink("http://www." + searchText);
+            }
+            var parsedSpeech = window.parsespeech(action);
+        }
+
+        window.speak = function (text, speaker) {
+            var msg = new SpeechSynthesisUtterance(text);
+            var voices = window.speechSynthesis.getVoices();
+            if (speaker !== undefined) {
+                var voice;
+                voices.forEach(function (v) { if (v.name === speaker) { voice = v; } })
+                msg.voice = voice;
+            }
+            window.speechSynthesis.speak(msg);
+        }
+
+        window.parsespeech = function (text) {
+            return $.post({
+                "url": '/parse',
+                "data": text,                
+            }).done(function(response) {
+                console.log(response);
+            }).promise();
+        }
+        });
+    </script>
+    <div style="container-fluid">
+        <div class="col-md-6 row" style="margin: auto;">
+            <div class="input-group">
+                <input class="form-control" type="text" id="cmd">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" id="listen"
+                            data-toggle="tooltip" data-placement="bottom"
+                            title="Click and start speaking"
+                            onclick="window.listen('cmd')">
+                        <i class="material-icons">mic</i>            
+                    </button>
+                </span>
+            </div>
+        </div>
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!--<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>-->
+    <script src="./popper.min.js"></script>
+    <script src="./bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+</body>
+
+</html>
