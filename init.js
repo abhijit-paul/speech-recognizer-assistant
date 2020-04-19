@@ -10,6 +10,6 @@ app.get('/', function (req, res) {
 app.post('/parse', function (req, res) {
   var knwlInstance = new Knwl('english');
   res.send('hello world')
-})
-
+});
+app.use(express.static('./'));
 app.listen(3000);
